@@ -1,0 +1,337 @@
+/* =====================
+   HERO — Full bleed centered
+   ===================== */
+.hero {
+  position: relative;
+  padding: 6rem 0 4rem;
+  text-align: center;
+  overflow: hidden;
+}
+
+.heroGlow {
+  position: absolute;
+  top: -120px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 600px;
+  height: 400px;
+  background: radial-gradient(ellipse, rgba(16, 185, 129, 0.12) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.heroInner {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.2rem;
+}
+
+.eyebrow {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--accent);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.title {
+  font-size: clamp(2.4rem, 6vw, 4rem);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  max-width: 600px;
+}
+
+.subtitle {
+  color: var(--text-secondary);
+  font-size: 1.05rem;
+  line-height: 1.7;
+  max-width: 460px;
+}
+
+.ctaGroup {
+  margin-top: 0.8rem;
+}
+
+/* =====================
+   STATS STRIP
+   ===================== */
+.statsStrip {
+  border-top: var(--border-subtle);
+  border-bottom: var(--border-subtle);
+  background: rgba(255, 255, 255, 0.015);
+}
+
+.statsInner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2.5rem;
+  padding: 1.8rem 0;
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
+}
+
+.statNumber {
+  font-size: 1.5rem;
+  font-weight: 700;
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--text-primary);
+}
+
+.statDesc {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.statDivider {
+  width: 1px;
+  height: 36px;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+/* =====================
+   ALTERNATING FEATURE ROWS
+   ===================== */
+.features {
+  padding: 3rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.featureRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+  align-items: center;
+  padding: 2.5rem;
+  background: var(--bg-card);
+  border: var(--border-subtle);
+  border-radius: var(--radius-lg);
+  transition: border-color 0.3s ease;
+}
+
+.featureRow:hover {
+  border-color: rgba(16, 185, 129, 0.12);
+}
+
+.featureRowReverse {
+  direction: rtl;
+}
+
+.featureRowReverse > * {
+  direction: ltr;
+}
+
+.featureText {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.featureIcon {
+  width: 38px;
+  height: 38px;
+  background: var(--accent-glow);
+  border: 1px solid rgba(16, 185, 129, 0.12);
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent);
+  margin-bottom: 0.3rem;
+}
+
+.featureText h2 {
+  font-size: 1.3rem;
+  font-weight: 700;
+}
+
+.featureText p {
+  color: var(--text-secondary);
+  font-size: 0.92rem;
+  line-height: 1.65;
+}
+
+/* =====================
+   MINI VISUALS
+   ===================== */
+.featureVisual {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  padding: 1.5rem;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  border-radius: var(--radius-md);
+}
+
+/* Mock input */
+.mockInput {
+  display: flex;
+  align-items: baseline;
+  gap: 0.3rem;
+  padding: 0.8rem 1rem;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: var(--radius-sm);
+}
+
+.mockCurrency {
+  font-size: 1rem;
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.mockAmount {
+  font-size: 1.6rem;
+  font-weight: 700;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.mockTags {
+  display: flex;
+  gap: 0.4rem;
+}
+
+.mockTag {
+  padding: 0.4rem 0.8rem;
+  font-size: 0.78rem;
+  font-weight: 500;
+  border-radius: 99px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  color: var(--text-secondary);
+}
+
+.mockTagActive {
+  background: var(--accent-glow);
+  border-color: rgba(16, 185, 129, 0.25);
+  color: var(--accent-light);
+}
+
+/* Mini chart */
+.miniChart {
+  display: flex;
+  align-items: flex-end;
+  gap: 6px;
+  height: 100px;
+  padding: 0.5rem 0;
+}
+
+.chartBar {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 4px 4px 0 0;
+  transition: background 0.2s;
+}
+
+.chartBarActive {
+  background: var(--accent);
+  box-shadow: 0 0 12px rgba(16, 185, 129, 0.3);
+}
+
+/* Currency stack */
+.currencyStack {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.currencyRow {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.65rem 1rem;
+  font-size: 0.88rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  border-radius: var(--radius-sm);
+}
+
+.currencyRowActive {
+  background: var(--accent-glow);
+  border-color: rgba(16, 185, 129, 0.2);
+  color: var(--accent-light);
+}
+
+.currencyVal {
+  margin-left: auto;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 600;
+  font-size: 0.82rem;
+}
+
+/* =====================
+   BOTTOM CTA
+   ===================== */
+.bottomCta {
+  text-align: center;
+  padding: 4rem 0 5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.bottomCta h2 {
+  font-size: 1.8rem;
+  font-weight: 700;
+}
+
+.bottomCta p {
+  color: var(--text-secondary);
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+/* =====================
+   RESPONSIVE
+   ===================== */
+@media (max-width: 768px) {
+  .hero {
+    padding: 3rem 0 2.5rem;
+  }
+
+  .statsInner {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.2rem;
+    text-align: center;
+  }
+
+  .statDivider {
+    display: none;
+  }
+
+  .featureRow {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    padding: 1.5rem;
+  }
+
+  .featureRowReverse {
+    direction: ltr;
+  }
+
+  .ctaGroup {
+    width: 100%;
+  }
+
+  .bottomCta h2 {
+    font-size: 1.4rem;
+  }
+}
