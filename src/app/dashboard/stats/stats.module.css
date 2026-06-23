@@ -1,0 +1,202 @@
+.header {
+  margin-bottom: 2rem;
+}
+
+.header h1 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.header p {
+  margin-top: 0.4rem;
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+}
+
+.grid {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.card {
+  background: var(--bg-card);
+  border: var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 1.5rem;
+}
+
+.card h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  color: var(--text-primary);
+}
+
+/* Bar Chart */
+.chartContainer {
+  display: flex;
+  align-items: flex-end;
+  gap: 1rem;
+  height: 200px;
+  padding-bottom: 2rem;
+}
+
+.barGroup {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  height: 100%;
+}
+
+.barWrapper {
+  flex: 1;
+  width: 100%;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.bar {
+  width: 70%;
+  max-width: 48px;
+  background: linear-gradient(180deg, var(--accent), rgba(16, 185, 129, 0.4));
+  border-radius: 6px 6px 2px 2px;
+  transition: height 0.5s ease;
+  min-height: 4px;
+}
+
+.barGroup:last-child .bar {
+  background: linear-gradient(180deg, var(--accent-light), var(--accent));
+  box-shadow: 0 0 12px rgba(16, 185, 129, 0.3);
+}
+
+.barLabel {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.barValue {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* Category Breakdown */
+.categoryList {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.categoryItem {
+  display: grid;
+  grid-template-columns: 1fr 2fr auto;
+  align-items: center;
+  gap: 1rem;
+}
+
+.categoryInfo {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.categoryEmoji {
+  font-size: 1.2rem;
+}
+
+.categoryText {
+  display: flex;
+  flex-direction: column;
+}
+
+.categoryText strong {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.categoryText span {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.categoryBar {
+  height: 6px;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 99px;
+  overflow: hidden;
+}
+
+.categoryFill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent), var(--accent-light));
+  border-radius: 99px;
+  transition: width 0.5s ease;
+}
+
+.categoryPct {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--accent);
+  min-width: 36px;
+  text-align: right;
+}
+
+/* Summary Row */
+.summaryRow {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+
+.summaryCard {
+  background: var(--bg-card);
+  border: var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 1.3rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  transition: all 0.3s ease;
+}
+
+.summaryCard:hover {
+  background: var(--bg-card-hover);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.summaryLabel {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+
+.summaryValue {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+@media (max-width: 768px) {
+  .header h1 {
+    font-size: 1.4rem;
+  }
+
+  .summaryRow {
+    grid-template-columns: 1fr;
+  }
+
+  .categoryItem {
+    grid-template-columns: 1fr 1.5fr auto;
+  }
+
+  .chartContainer {
+    height: 160px;
+  }
+}

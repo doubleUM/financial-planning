@@ -3,19 +3,24 @@
 import { useState } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { Home, List, PieChart, Plus, User } from "lucide-react"
+import { useSession } from "next-auth/react"
+import { Home, List, PieChart, Plus, User, LogIn } from "lucide-react"
 import styles from "./Navbar.module.css"
 import AddExpenseModal from "../expenses/AddExpenseModal"
 import CurrencySelector from "./CurrencySelector"
 
 export default function Navbar() {
   const pathname = usePathname()
+  const { data: session } = useSession()
+  const isGuest = !session?.user
 
   const navItems = [
     { name: "Home", icon: Home, path: "/dashboard" },
     { name: "Expenses", icon: List, path: "/dashboard/expenses" },
     { name: "Stats", icon: PieChart, path: "/dashboard/stats" },
-    { name: "Profile", icon: User, path: "/dashboard/profile" },
+    isGuest
+      ? { name: "Sign In", icon: LogIn, path: "/login" }
+      : { name: "Profile", icon: User, path: "/dashboard/profile" },
   ]
 
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -47,7 +52,7 @@ export default function Navbar() {
       <header className={styles.header}>
         <div className="container">
           <div className={styles.headerContent}>
-            <Link href="/dashboard" className={styles.logo}>
+            <Link href="/" className={styles.logo}>
               SpendWise
             </Link>
             <div className={styles.headerRight}>

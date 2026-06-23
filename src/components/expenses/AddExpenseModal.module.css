@@ -112,6 +112,17 @@
   color: var(--text-muted);
 }
 
+/* Hide number input spinners */
+.inputGroup input[type="number"]::-webkit-inner-spin-button,
+.inputGroup input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.inputGroup input[type="number"] {
+  -moz-appearance: textfield; /* Firefox */
+}
+
 /* Custom Dropdown */
 .customSelectContainer {
   position: relative;
@@ -169,4 +180,16 @@
 .option:hover {
   background: rgba(16, 185, 129, 0.08);
   color: var(--accent);
+}
+
+.errorMsg {
+  color: var(--danger, #ef4444);
+  font-size: 0.85rem;
+  font-weight: 500;
+  background: rgba(239, 68, 68, 0.1);
+  padding: 0.6rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  margin-bottom: 0.5rem;
+  text-align: center;
 }

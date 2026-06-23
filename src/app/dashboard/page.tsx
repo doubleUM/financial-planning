@@ -1,19 +1,20 @@
-import { auth } from "@/auth"
-import { redirect } from "next/navigation"
-import { TrendingUp, TrendingDown, DollarSign, Calendar } from "lucide-react"
+"use client"
+
+import { useSession } from "next-auth/react"
+import { TrendingUp, TrendingDown, DollarSign } from "lucide-react"
 import styles from "./dashboard.module.css"
 import { formatCurrency } from "@/lib/utils/currency"
+import { useCurrency } from "@/components/providers/CurrencyContext"
+import DemoBanner from "@/components/layout/DemoBanner"
 
-export default async function Dashboard() {
-  const session = await auth()
+export default function Dashboard() {
+  const { data: session } = useSession()
+  const { currency: userCurrency } = useCurrency()
 
-  if (!session) {
-    redirect("/login")
-  }
+  const isGuest = !session?.user
+  const userName = session?.user?.name || "Explorer"
 
-  const userCurrency = session.user?.currency || "USD"
-
-  // Mock data for initial UI
+  // Mock data for initial UI / demo
   const stats = [
     { label: "Total Balance", value: 4250.00, icon: DollarSign, trend: "+12%" },
     { label: "Monthly Spent", value: 1120.50, icon: TrendingDown, trend: "-5%" },
@@ -28,8 +29,10 @@ export default async function Dashboard() {
 
   return (
     <div className="container">
+      {isGuest && <DemoBanner />}
+
       <header className={styles.welcome}>
-        <h1>Welcome back, {session.user?.name || "there"}</h1>
+        <h1>Welcome back, {userName}</h1>
         <p>Here's what's happening with your finances.</p>
       </header>
 

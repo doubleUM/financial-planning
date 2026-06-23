@@ -1,0 +1,142 @@
+.header {
+  margin-bottom: 2rem;
+}
+
+.header h1 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.header p {
+  margin-top: 0.4rem;
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+}
+
+.tableCard {
+  background: var(--bg-card);
+  border: var(--border-subtle);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.tableHeader {
+  display: grid;
+  grid-template-columns: 2fr 1.2fr 1fr 1fr;
+  padding: 0.9rem 1.5rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-bottom: var(--border-subtle);
+}
+
+.tableRow {
+  display: grid;
+  grid-template-columns: 2fr 1.2fr 1fr 1fr;
+  align-items: center;
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+  transition: background 0.2s ease;
+}
+
+.tableRow:last-child {
+  border-bottom: none;
+}
+
+.tableRow:hover {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.titleCell {
+  display: flex;
+  flex-direction: column;
+}
+
+.titleCell strong {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.titleCell span {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  margin-top: 0.15rem;
+}
+
+.categoryCell {
+  display: flex;
+  align-items: center;
+}
+
+.categoryBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 99px;
+  padding: 0.3rem 0.7rem;
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.dateCell {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+.amountCol {
+  text-align: right;
+}
+
+.amountCell {
+  text-align: right;
+  font-weight: 600;
+  color: var(--danger);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.88rem;
+}
+
+@media (max-width: 768px) {
+  .header h1 {
+    font-size: 1.4rem;
+  }
+
+  .tableHeader {
+    display: none;
+  }
+
+  .tableRow {
+    grid-template-columns: 1fr auto;
+    grid-template-rows: auto auto;
+    gap: 0.3rem;
+    padding: 0.9rem 1rem;
+  }
+
+  .titleCell {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .amountCell {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .categoryCell {
+    grid-column: 1;
+    grid-row: 2;
+  }
+
+  .dateCell {
+    grid-column: 2;
+    grid-row: 2;
+    text-align: right;
+    font-size: 0.75rem;
+  }
+}

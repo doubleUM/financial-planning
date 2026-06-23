@@ -5,11 +5,14 @@ import { useSession } from "next-auth/react"
 import { X, DollarSign, Tag, FileText, ChevronDown } from "lucide-react"
 import styles from "./AddExpenseModal.module.css"
 import { getCurrencySymbol } from "@/lib/utils/currency"
+import { useCurrency } from "@/components/providers/CurrencyContext"
 
 export default function AddExpenseModal({ isOpen, onClose }: { isOpen: boolean, onClose: () => void }) {
   const { data: session } = useSession()
+  const { currency } = useCurrency()
   const [isSelectOpen, setIsSelectOpen] = useState(false)
   const [category, setCategory] = useState("")
+  const [error, setError] = useState("")
   
   const categories = [
     "Food & Drinks", "Transport", "Shopping", "Bills & Utilities", "Entertainment", "Health", "Other"
@@ -25,11 +28,23 @@ export default function AddExpenseModal({ isOpen, onClose }: { isOpen: boolean, 
           <button onClick={onClose} className={styles.closeBtn}><X size={20} /></button>
         </div>
 
-        <form className={styles.form}>
+        {error && <div className={styles.errorMsg}>{error}</div>}
+
+        <form 
+          className={styles.form}
+          onSubmit={(e) => {
+            e.preventDefault()
+            if (!session?.user) {
+              setError("Please login first to save an expense.")
+              return
+            }
+            // Add real save logic here later
+          }}
+        >
           <div className={styles.inputGroup}>
             <label>
               <span className={styles.currencySymbol}>
-                {getCurrencySymbol(session?.user?.currency)}
+                {getCurrencySymbol(currency)}
               </span>
               Amount
             </label>

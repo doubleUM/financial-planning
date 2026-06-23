@@ -1,6 +1,7 @@
 import { signIn } from "@/auth"
 import { Github } from "lucide-react"
 import styles from "./login.module.css"
+import AuthForm from "./AuthForm"
 
 export default function LoginPage() {
   return (
@@ -9,7 +10,11 @@ export default function LoginPage() {
         <h1>Welcome Back</h1>
         <p>Sign in to continue tracking your expenses.</p>
         
-        <div className={styles.buttonGroup}>
+        <AuthForm />
+        
+        <div className={styles.divider}>or continue with</div>
+        
+        <div className={styles.buttonGroup} style={{ marginTop: 0 }}>
           <form
             action={async () => {
               "use server"
@@ -17,7 +22,7 @@ export default function LoginPage() {
             }}
           >
             <button className="btn btn-secondary w-full">
-              <Github size={20} /> Continue with GitHub
+              <Github size={20} /> GitHub
             </button>
           </form>
 
@@ -34,7 +39,7 @@ export default function LoginPage() {
                 <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
                 <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
               </svg>
-              Continue with Google
+              Google
             </button>
           </form>
         </div>

@@ -130,7 +130,14 @@
   .desktopNav {
     display: none;
   }
+
   .mobileNav {
     display: flex;
+  }
+}
+
+@media (min-width: 769px) {
+  .fab {
+    bottom: 1.5rem;
   }
 }

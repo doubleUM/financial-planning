@@ -27,7 +27,7 @@ export default function RootLayout({
       <body className={dmSans.className}>
         <Providers>
           <Navbar />
-          <main style={{ paddingTop: "2rem", paddingBottom: "7rem" }}>
+          <main style={{ paddingBottom: "7rem" }}>
             {children}
           </main>
         </Providers>

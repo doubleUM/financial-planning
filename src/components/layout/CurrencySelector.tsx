@@ -4,28 +4,39 @@ import { useState } from "react"
 import { useSession } from "next-auth/react"
 import { ChevronDown, Globe } from "lucide-react"
 import { CURRENCIES } from "@/lib/utils/currency"
+import { updateCurrency } from "@/app/actions"
+import { useCurrency } from "@/components/providers/CurrencyContext"
 import styles from "./CurrencySelector.module.css"
 
 export default function CurrencySelector() {
   const { data: session, update } = useSession()
+  const { currency: currentCurrency, setCurrency } = useCurrency()
   const [isOpen, setIsOpen] = useState(false)
-  
-  const currentCurrency = session?.user?.currency || "USD"
+  const [isPending, setIsPending] = useState(false)
+
   const selected = CURRENCIES.find(c => c.code === currentCurrency) || CURRENCIES[0]
 
   const handleSelect = async (code: string) => {
+    if (isPending) return
     setIsOpen(false)
-    
-    // In a real app, we'd call a Server Action to update the DB
-    // For now, we update the session client-side
-    await update({ currency: code })
-    
-    // Pro-tip: You might want to refresh or show a toast here
+    setIsPending(true)
+
+    try {
+      if (session?.user?.id) {
+        await updateCurrency(code)
+        await update({ currency: code })
+      }
+      setCurrency(code)
+    } catch (error) {
+      console.error("Failed to update currency", error)
+    } finally {
+      setIsPending(false)
+    }
   }
 
   return (
     <div className={styles.container}>
-      <button 
+      <button
         className={styles.trigger}
         onClick={() => setIsOpen(!isOpen)}
       >
