@@ -4,6 +4,7 @@ import "./globals.css";
 import Providers from "@/components/providers/SessionProvider";
 import Navbar from "@/components/layout/Navbar";
 import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 const dmSans = DM_Sans({ subsets: ["latin"], weight: ["400", "500", "600", "700"] });
 
@@ -33,6 +34,7 @@ export default function RootLayout({
           </main>
         </Providers>
         <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );
