@@ -183,6 +183,13 @@
   color: var(--text-primary);
 }
 
+.emptyState {
+  padding: 2rem;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
 @media (max-width: 768px) {
   .header h1 {
     font-size: 1.4rem;

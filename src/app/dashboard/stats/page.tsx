@@ -1,111 +1,75 @@
-"use client"
+import { auth } from "@/auth"
+import { prisma } from "@/lib/prisma"
+import StatsClient, { type StatsData } from "./StatsClient"
 
-import { useSession } from "next-auth/react"
-import { formatCurrency } from "@/lib/utils/currency"
-import { useCurrency } from "@/components/providers/CurrencyContext"
-import DemoBanner from "@/components/layout/DemoBanner"
-import styles from "./stats.module.css"
+const categoryEmojis: Record<string, string> = {
+  "Food & Drinks": "🍔",
+  "Entertainment": "🎬",
+  "Shopping": "🛒",
+  "Transport": "🚗",
+  "Bills & Utilities": "💡",
+  "Health": "💪",
+  "Other": "📦",
+}
 
-export default function StatsPage() {
-  const { data: session } = useSession()
-  const { currency: userCurrency } = useCurrency()
-  const isGuest = !session?.user
+export default async function StatsPage() {
+  const session = await auth()
 
-  const categoryBreakdown = [
-    { category: "Food & Drinks", emoji: "🍔", amount: 245.80, percentage: 32 },
-    { category: "Shopping", emoji: "🛒", amount: 187.50, percentage: 24 },
-    { category: "Bills & Utilities", emoji: "💡", amount: 130.00, percentage: 17 },
-    { category: "Transport", emoji: "🚗", amount: 98.40, percentage: 13 },
-    { category: "Entertainment", emoji: "🎬", amount: 65.99, percentage: 8 },
-    { category: "Health", emoji: "💪", amount: 45.00, percentage: 6 },
-  ]
+  if (!session?.user?.id) {
+    return <StatsClient isGuest={true} data={null} />
+  }
 
-  const monthlyTrend = [
-    { month: "Jan", amount: 920 },
-    { month: "Feb", amount: 1050 },
-    { month: "Mar", amount: 880 },
-    { month: "Apr", amount: 1200 },
-    { month: "May", amount: 772.69 },
-  ]
+  const expenses = await prisma.expense.findMany({
+    where: { userId: session.user.id },
+    select: { amount: true, category: true, date: true },
+  })
 
-  const maxMonthly = Math.max(...monthlyTrend.map(m => m.amount))
+  const now = new Date()
+  const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1)
 
-  return (
-    <div className="container">
-      {isGuest && <DemoBanner />}
+  // Category breakdown (all-time)
+  const byCategory = new Map<string, number>()
+  let grandTotal = 0
+  for (const e of expenses) {
+    byCategory.set(e.category, (byCategory.get(e.category) ?? 0) + e.amount)
+    grandTotal += e.amount
+  }
+  const categoryBreakdown = [...byCategory.entries()]
+    .map(([category, amount]) => ({
+      category,
+      emoji: categoryEmojis[category] ?? "📦",
+      amount,
+      percentage: grandTotal > 0 ? Math.round((amount / grandTotal) * 100) : 0,
+    }))
+    .sort((a, b) => b.amount - a.amount)
 
-      <header className={styles.header}>
-        <h1>Statistics</h1>
-        <p>Insights into your spending habits.</p>
-      </header>
+  // Monthly trend (last 5 months)
+  const monthlyTrend: { month: string; amount: number }[] = []
+  for (let i = 4; i >= 0; i--) {
+    const d = new Date(now.getFullYear(), now.getMonth() - i, 1)
+    const next = new Date(now.getFullYear(), now.getMonth() - i + 1, 1)
+    const amount = expenses
+      .filter(e => e.date >= d && e.date < next)
+      .reduce((sum, e) => sum + e.amount, 0)
+    monthlyTrend.push({ month: d.toLocaleDateString("en-US", { month: "short" }), amount })
+  }
 
-      <div className={styles.grid}>
-        {/* Monthly Spending Trend */}
-        <div className={styles.card}>
-          <h3>Monthly Spending</h3>
-          <div className={styles.chartContainer}>
-            {monthlyTrend.map((month) => (
-              <div key={month.month} className={styles.barGroup}>
-                <div className={styles.barWrapper}>
-                  <div
-                    className={styles.bar}
-                    style={{ height: `${(month.amount / maxMonthly) * 100}%` }}
-                  />
-                </div>
-                <span className={styles.barLabel}>{month.month}</span>
-                <span className={styles.barValue}>
-                  {formatCurrency(month.amount, userCurrency)}
-                </span>
-              </div>
-            ))}
-          </div>
-        </div>
+  // This month summary
+  const totalThisMonth = expenses
+    .filter(e => e.date >= startOfMonth)
+    .reduce((sum, e) => sum + e.amount, 0)
+  const dayOfMonth = now.getDate()
+  const dailyAverage = dayOfMonth > 0 ? totalThisMonth / dayOfMonth : 0
+  const topCategory = categoryBreakdown[0]
 
-        {/* Category Breakdown */}
-        <div className={styles.card}>
-          <h3>By Category</h3>
-          <div className={styles.categoryList}>
-            {categoryBreakdown.map((cat) => (
-              <div key={cat.category} className={styles.categoryItem}>
-                <div className={styles.categoryInfo}>
-                  <span className={styles.categoryEmoji}>{cat.emoji}</span>
-                  <div className={styles.categoryText}>
-                    <strong>{cat.category}</strong>
-                    <span>{formatCurrency(cat.amount, userCurrency)}</span>
-                  </div>
-                </div>
-                <div className={styles.categoryBar}>
-                  <div
-                    className={styles.categoryFill}
-                    style={{ width: `${cat.percentage}%` }}
-                  />
-                </div>
-                <span className={styles.categoryPct}>{cat.percentage}%</span>
-              </div>
-            ))}
-          </div>
-        </div>
+  const data: StatsData = {
+    categoryBreakdown,
+    monthlyTrend,
+    totalThisMonth,
+    dailyAverage,
+    topCategory: topCategory ? `${topCategory.emoji} ${topCategory.category}` : "—",
+    hasData: expenses.length > 0,
+  }
 
-        {/* Summary Cards */}
-        <div className={styles.summaryRow}>
-          <div className={styles.summaryCard}>
-            <span className={styles.summaryLabel}>Total This Month</span>
-            <strong className={styles.summaryValue}>
-              {formatCurrency(772.69, userCurrency)}
-            </strong>
-          </div>
-          <div className={styles.summaryCard}>
-            <span className={styles.summaryLabel}>Daily Average</span>
-            <strong className={styles.summaryValue}>
-              {formatCurrency(36.79, userCurrency)}
-            </strong>
-          </div>
-          <div className={styles.summaryCard}>
-            <span className={styles.summaryLabel}>Top Category</span>
-            <strong className={styles.summaryValue}>🍔 Food & Drinks</strong>
-          </div>
-        </div>
-      </div>
-    </div>
-  )
+  return <StatsClient isGuest={false} data={data} />
 }

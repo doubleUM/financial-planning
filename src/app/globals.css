@@ -30,6 +30,12 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+html {
+  /* Always reserve space for the scrollbar so centered content doesn't
+     shift horizontally between pages that scroll and pages that don't. */
+  scrollbar-gutter: stable;
+}
+
 body {
   background: var(--bg-primary);
   color: var(--text-primary);

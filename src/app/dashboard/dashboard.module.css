@@ -178,6 +178,13 @@
   transition: width 0.5s ease;
 }
 
+.emptyState {
+  padding: 2rem;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
 .goalProgress p {
   font-size: 0.85rem;
   color: var(--text-secondary);

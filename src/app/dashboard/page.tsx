@@ -1,92 +1,48 @@
-"use client"
+import { auth } from "@/auth"
+import { prisma } from "@/lib/prisma"
+import DashboardClient from "./DashboardClient"
 
-import { useSession } from "next-auth/react"
-import { TrendingUp, TrendingDown, DollarSign } from "lucide-react"
-import styles from "./dashboard.module.css"
-import { formatCurrency } from "@/lib/utils/currency"
-import { useCurrency } from "@/components/providers/CurrencyContext"
-import DemoBanner from "@/components/layout/DemoBanner"
+export default async function DashboardPage() {
+  const session = await auth()
 
-export default function Dashboard() {
-  const { data: session } = useSession()
-  const { currency: userCurrency } = useCurrency()
+  if (!session?.user?.id) {
+    return <DashboardClient expenses={[]} monthlySpent={0} totalSpent={0} isGuest={true} userName="Explorer" />
+  }
 
-  const isGuest = !session?.user
-  const userName = session?.user?.name || "Explorer"
+  const now = new Date()
+  const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1)
 
-  // Mock data for initial UI / demo
-  const stats = [
-    { label: "Total Balance", value: 4250.00, icon: DollarSign, trend: "+12%" },
-    { label: "Monthly Spent", value: 1120.50, icon: TrendingDown, trend: "-5%" },
-    { label: "Monthly Income", value: 2800.00, icon: TrendingUp, trend: "+8%" },
-  ]
-
-  const recentExpenses = [
-    { id: 1, title: "Starbucks", category: "Food", amount: 5.50, date: "Today" },
-    { id: 2, title: "Netflix", category: "Subscription", amount: 15.99, date: "Yesterday" },
-    { id: 3, title: "Groceries", category: "Shopping", amount: 82.30, date: "2 days ago" },
-  ]
+  const [recentExpenses, monthlyAgg, totalAgg] = await Promise.all([
+    prisma.expense.findMany({
+      where: { userId: session.user.id },
+      orderBy: { date: "desc" },
+      take: 3,
+    }),
+    prisma.expense.aggregate({
+      where: { userId: session.user.id, date: { gte: startOfMonth } },
+      _sum: { amount: true },
+    }),
+    prisma.expense.aggregate({
+      where: { userId: session.user.id },
+      _sum: { amount: true },
+      _count: true,
+    }),
+  ])
 
   return (
-    <div className="container">
-      {isGuest && <DemoBanner />}
-
-      <header className={styles.welcome}>
-        <h1>Welcome back, {userName}</h1>
-        <p>Here's what's happening with your finances.</p>
-      </header>
-
-      <section className={styles.statsGrid}>
-        {stats.map((stat, i) => (
-          <div key={i} className={styles.statCard}>
-            <div className={styles.statHeader}>
-              <div className={styles.iconBox}>
-                <stat.icon size={24} />
-              </div>
-            </div>
-            <div className={styles.statContent}>
-              <span className={styles.statLabel}>{stat.label}</span>
-              <h2 className={styles.statValue}>{formatCurrency(stat.value, userCurrency)}</h2>
-            </div>
-          </div>
-        ))}
-      </section>
-
-      <section className={styles.contentGrid}>
-        <div className={styles.mainContent}>
-          <div className={styles.sectionHeader}>
-            <h3>Recent Expenses</h3>
-            <button className="btn btn-secondary">View All</button>
-          </div>
-          <div className={styles.expenseList}>
-            {recentExpenses.map((expense) => (
-              <div key={expense.id} className={styles.expenseItem}>
-                <div className={styles.expenseInfo}>
-                  <strong>{expense.title}</strong>
-                  <span>{expense.category} • {expense.date}</span>
-                </div>
-                <div className={`${styles.expenseAmount} mono`}>
-                  -{formatCurrency(expense.amount, userCurrency)}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <div className={styles.sideContent}>
-          <h3>Monthly Goal</h3>
-          <div className={styles.goalProgress}>
-            <div className={styles.progressHeader}>
-              <span>Savings Goal</span>
-              <span>75%</span>
-            </div>
-            <div className={styles.progressBar}>
-              <div className={styles.progressFill} style={{ width: "75%" }}></div>
-            </div>
-            <p>You're almost there! Just {formatCurrency(250, userCurrency)} more to reach your goal.</p>
-          </div>
-        </div>
-      </section>
-    </div>
+    <DashboardClient
+      expenses={recentExpenses.map(e => ({
+        id: e.id,
+        description: e.description ?? e.category,
+        category: e.category,
+        amount: e.amount,
+        date: e.date.toISOString(),
+      }))}
+      monthlySpent={monthlyAgg._sum.amount ?? 0}
+      totalSpent={totalAgg._sum.amount ?? 0}
+      totalCount={totalAgg._count}
+      isGuest={false}
+      userName={session.user.name ?? "User"}
+    />
   )
 }

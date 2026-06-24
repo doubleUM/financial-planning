@@ -22,6 +22,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       return token
     },
     async session({ session, token }) {
+      session.user.id = token.sub as string
       if (token.currency) {
         session.user.currency = token.currency as string
       }
