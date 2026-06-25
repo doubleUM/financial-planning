@@ -3,10 +3,15 @@
 import { SessionProvider } from "next-auth/react"
 import { CurrencyProvider } from "./CurrencyContext"
 
-export default function Providers({ children }: { children: React.ReactNode }) {
+type ProvidersProps = {
+  children: React.ReactNode
+  initialCurrency?: string
+}
+
+export default function Providers({ children, initialCurrency }: ProvidersProps) {
   return (
     <SessionProvider>
-      <CurrencyProvider>{children}</CurrencyProvider>
+      <CurrencyProvider initialCurrency={initialCurrency}>{children}</CurrencyProvider>
     </SessionProvider>
   )
 }

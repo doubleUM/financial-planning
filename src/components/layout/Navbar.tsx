@@ -9,10 +9,14 @@ import styles from "./Navbar.module.css"
 import AddExpenseModal from "../expenses/AddExpenseModal"
 import CurrencySelector from "./CurrencySelector"
 
-export default function Navbar() {
+type NavbarProps = {
+  isLoggedIn?: boolean
+}
+
+export default function Navbar({ isLoggedIn = false }: NavbarProps) {
   const pathname = usePathname()
-  const { data: session } = useSession()
-  const isGuest = !session?.user
+  const { data: session, status } = useSession()
+  const isGuest = status === "loading" ? !isLoggedIn : !session?.user
 
   const navItems = [
     { name: "Home", icon: Home, path: "/dashboard" },
@@ -76,3 +80,4 @@ export default function Navbar() {
     </>
   )
 }
+
