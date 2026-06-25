@@ -23,7 +23,8 @@
 
 .tableHeader {
   display: grid;
-  grid-template-columns: 2fr 1.2fr 1fr 1fr 2rem;
+  grid-template-columns: 2fr 1.2fr 1fr 1fr minmax(4rem, max-content);
+  gap: 1rem;
   padding: 0.9rem 1.5rem;
   font-size: 0.75rem;
   font-weight: 600;
@@ -35,7 +36,8 @@
 
 .tableRow {
   display: grid;
-  grid-template-columns: 2fr 1.2fr 1fr 1fr 2rem;
+  grid-template-columns: 2fr 1.2fr 1fr 1fr minmax(4rem, max-content);
+  gap: 1rem;
   align-items: center;
   padding: 1rem 1.5rem;
   border-bottom: 1px solid rgba(255, 255, 255, 0.03);
@@ -106,8 +108,10 @@
   display: flex;
   align-items: center;
   justify-content: flex-end;
+  gap: 0.25rem;
 }
 
+.editBtn,
 .deleteBtn {
   display: flex;
   align-items: center;
@@ -122,8 +126,14 @@
   transition: opacity 0.2s ease, color 0.2s ease, background 0.2s ease;
 }
 
+.tableRow:hover .editBtn,
 .tableRow:hover .deleteBtn {
   opacity: 1;
+}
+
+.editBtn:hover {
+  color: var(--accent);
+  background: rgba(16, 185, 129, 0.1);
 }
 
 .deleteBtn:hover {
@@ -131,9 +141,57 @@
   background: rgba(244, 63, 94, 0.1);
 }
 
+.editBtn:disabled,
 .deleteBtn:disabled {
   opacity: 0.4;
   cursor: not-allowed;
+}
+
+.confirmDeleteGroup {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: rgba(244, 63, 94, 0.08);
+  border: 1px solid rgba(244, 63, 94, 0.2);
+  padding: 0.2rem 0.3rem 0.2rem 0.6rem;
+  border-radius: var(--radius-sm);
+}
+
+.confirmText {
+  font-size: 0.75rem;
+  color: var(--danger);
+  font-weight: 600;
+  margin-right: 0.2rem;
+}
+
+.confirmYesBtn,
+.confirmNoBtn {
+  background: none;
+  border: none;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.confirmYesBtn {
+  background: var(--danger);
+  color: #fff;
+}
+
+.confirmYesBtn:hover {
+  background: #e11d48;
+}
+
+.confirmNoBtn {
+  color: var(--text-muted);
+}
+
+.confirmNoBtn:hover {
+  color: var(--text-primary);
+  background: rgba(255, 255, 255, 0.1);
 }
 
 .emptyState {
@@ -175,6 +233,7 @@
     align-self: center;
   }
 
+  .editBtn,
   .deleteBtn {
     opacity: 1;
   }

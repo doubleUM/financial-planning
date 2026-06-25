@@ -1,6 +1,7 @@
 "use client"
 
 import { useSession, signOut } from "next-auth/react"
+import CategoryManager from "@/components/categories/CategoryManager"
 import styles from "./profile.module.css"
 
 export default function ProfilePage() {
@@ -38,6 +39,10 @@ export default function ProfilePage() {
           <span className={styles.label}>Email</span>
           <span className={styles.value}>{user?.email || "—"}</span>
         </div>
+      </div>
+
+      <div className={styles.card}>
+        <CategoryManager />
       </div>
 
       <button

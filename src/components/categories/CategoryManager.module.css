@@ -1,0 +1,380 @@
+.container {
+  margin-top: 0;
+}
+
+.title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 0.25rem;
+}
+
+.subtitle {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-bottom: 1.2rem;
+}
+
+.loading {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  padding: 1rem 0;
+}
+
+/* ─── Add Row ─────────────────────────────────────────── */
+
+.addRow {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.emojiPickerWrapper {
+  position: relative;
+}
+
+.emojiBtn {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  background: rgba(255, 255, 255, 0.04);
+  border: var(--border-subtle);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.emojiBtn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+.emojiGrid {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 20;
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 2px;
+  padding: 0.5rem;
+  margin-top: 0.4rem;
+  background: var(--bg-secondary);
+  border: var(--border-subtle);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-soft);
+  min-width: 200px;
+}
+
+.emojiOption {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.15rem;
+  padding: 0.4rem;
+  background: none;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.emojiOption:hover {
+  background: rgba(16, 185, 129, 0.12);
+}
+
+.addInput,
+.editInput {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.04);
+  border: var(--border-subtle);
+  border-radius: var(--radius-sm);
+  padding: 0.6rem 0.8rem;
+  color: var(--text-primary);
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.addInput:focus,
+.editInput:focus {
+  outline: none;
+  border-color: rgba(16, 185, 129, 0.4);
+  background: rgba(16, 185, 129, 0.04);
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.08);
+}
+
+.addInput::placeholder {
+  color: var(--text-muted);
+}
+
+.addBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background: var(--accent);
+  border: none;
+  border-radius: var(--radius-sm);
+  color: #fff;
+  cursor: pointer;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+
+.addBtn:hover {
+  filter: brightness(1.1);
+  transform: translateY(-1px);
+}
+
+.addBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ─── Category List ───────────────────────────────────── */
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin-top: 0.5rem;
+}
+
+.categoryRow {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.65rem 0.5rem;
+  border-radius: var(--radius-sm);
+  transition: background 0.2s;
+}
+
+.categoryRow:hover {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.categoryEmoji {
+  font-size: 1.15rem;
+  width: 28px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.categoryName {
+  flex: 1;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.categoryActions {
+  display: flex;
+  align-items: center;
+  gap: 0.2rem;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.categoryRow:hover .categoryActions {
+  opacity: 1;
+}
+
+.iconBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.3rem;
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  border-radius: 4px;
+  transition: all 0.15s;
+}
+
+.iconBtn:hover {
+  color: var(--accent);
+  background: rgba(16, 185, 129, 0.1);
+}
+
+.iconBtnDanger:hover {
+  color: var(--danger);
+  background: rgba(244, 63, 94, 0.1);
+}
+
+.iconBtn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* ─── Edit Mode ───────────────────────────────────────── */
+
+.confirmBtn,
+.cancelBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.35rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.15s;
+  flex-shrink: 0;
+}
+
+.confirmBtn {
+  background: rgba(16, 185, 129, 0.15);
+  color: var(--accent);
+}
+
+.confirmBtn:hover {
+  background: rgba(16, 185, 129, 0.25);
+}
+
+.confirmBtn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.cancelBtn {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-muted);
+}
+
+.cancelBtn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--text-secondary);
+}
+
+/* ─── Reassign & Delete ───────────────────────────────── */
+
+.reassignBox {
+  margin: 0.25rem 0 0.5rem 0;
+  padding: 0.8rem;
+  background: rgba(245, 158, 11, 0.06);
+  border: 1px solid rgba(245, 158, 11, 0.15);
+  border-radius: var(--radius-sm);
+}
+
+.reassignHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--warning);
+  font-size: 0.85rem;
+  font-weight: 500;
+  margin-bottom: 0.6rem;
+}
+
+.reassignControls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.reassignSelect {
+  flex: 1;
+  min-width: 140px;
+  background: rgba(255, 255, 255, 0.06);
+  border: var(--border-subtle);
+  border-radius: var(--radius-sm);
+  padding: 0.5rem 0.7rem;
+  color: var(--text-primary);
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.reassignSelect option {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+}
+
+.reassignBtn {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.5rem 0.9rem;
+  background: var(--danger);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.reassignBtn:hover {
+  filter: brightness(1.1);
+}
+
+.reassignBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.reassignCancel {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.5rem 0.7rem;
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--text-secondary);
+  border: var(--border-subtle);
+  border-radius: var(--radius-sm);
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.reassignCancel:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* ─── Errors & Empty State ────────────────────────────── */
+
+.errorMsg {
+  color: var(--danger, #ef4444);
+  font-size: 0.8rem;
+  font-weight: 500;
+  padding: 0.4rem 0;
+}
+
+.inlineError {
+  color: var(--danger, #ef4444);
+  font-size: 0.8rem;
+  font-weight: 500;
+  padding: 0.2rem 0.5rem 0.4rem 0.5rem;
+}
+
+.emptyState {
+  padding: 1.5rem;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+/* ─── Responsive ──────────────────────────────────────── */
+
+@media (max-width: 768px) {
+  .categoryActions {
+    opacity: 1;
+  }
+
+  .reassignControls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .reassignSelect {
+    width: 100%;
+  }
+}

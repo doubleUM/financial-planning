@@ -44,6 +44,7 @@ model User {
   accounts      Account[]
   sessions      Session[]
   expenses      Expense[]
+  categories    Category[]
 }
 
 model VerificationToken {
@@ -66,3 +67,16 @@ model Expense {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
+
+model Category {
+  id     String @id @default(cuid())
+  name   String
+  emoji  String @default("📦")
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@unique([name, userId])
+}
+

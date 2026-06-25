@@ -5,19 +5,55 @@ import { X, Tag, FileText, ChevronDown } from "lucide-react"
 import styles from "./AddExpenseModal.module.css"
 import { getCurrencySymbol } from "@/lib/utils/currency"
 import { useCurrency } from "@/components/providers/CurrencyContext"
-import { addExpense } from "@/app/dashboard/expenses/actions"
+import { addExpense, editExpense, getCategories, type CategoryData } from "@/app/dashboard/expenses/actions"
 
-export default function AddExpenseModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
+type Expense = {
+  id: string
+  description: string
+  category: string
+  amount: number
+}
+
+type Props = {
+  isOpen: boolean
+  onClose: () => void
+  expense?: Expense | null
+}
+
+export default function AddExpenseModal({ isOpen, onClose, expense }: Props) {
   const { currency } = useCurrency()
   const [isSelectOpen, setIsSelectOpen] = useState(false)
   const [category, setCategory] = useState("")
+  const [categories, setCategories] = useState<CategoryData[]>([])
+  const [loadingCategories, setLoadingCategories] = useState(false)
 
-  const [state, formAction, pending] = useActionState(addExpense, null)
+  const isEditMode = !!expense
 
-  const categories = [
-    "Food & Drinks", "Transport", "Shopping", "Bills & Utilities", "Entertainment", "Health", "Other"
-  ]
+  const [state, formAction, pending] = useActionState(
+    isEditMode ? editExpense : addExpense,
+    null
+  )
 
+  // Fetch categories when modal opens
+  useEffect(() => {
+    if (isOpen) {
+      setLoadingCategories(true)
+      getCategories().then((cats) => {
+        setCategories(cats)
+        setLoadingCategories(false)
+      })
+    }
+  }, [isOpen])
+
+  // Reset form when modal opens
+  useEffect(() => {
+    if (isOpen) {
+      setCategory(expense?.category || "")
+      setIsSelectOpen(false)
+    }
+  }, [isOpen, expense])
+
+  // Close on success
   useEffect(() => {
     if (state && "success" in state && state.success) {
       setCategory("")
@@ -25,20 +61,13 @@ export default function AddExpenseModal({ isOpen, onClose }: { isOpen: boolean; 
     }
   }, [state]) // eslint-disable-line react-hooks/exhaustive-deps
 
-  useEffect(() => {
-    if (isOpen) {
-      setCategory("")
-      setIsSelectOpen(false)
-    }
-  }, [isOpen])
-
   if (!isOpen) return null
 
   return (
     <div className={styles.overlay} onClick={onClose}>
       <div className={styles.modal} onClick={e => e.stopPropagation()}>
         <div className={styles.header}>
-          <h2>Add Expense</h2>
+          <h2>{isEditMode ? "Edit Expense" : "Add Expense"}</h2>
           <button type="button" onClick={onClose} className={styles.closeBtn}><X size={20} /></button>
         </div>
 
@@ -47,6 +76,7 @@ export default function AddExpenseModal({ isOpen, onClose }: { isOpen: boolean; 
         )}
 
         <form action={formAction} className={styles.form}>
+          {isEditMode && <input type="hidden" name="id" value={expense.id} />}
           <input type="hidden" name="category" value={category} />
 
           <div className={styles.inputGroup}>
@@ -54,7 +84,15 @@ export default function AddExpenseModal({ isOpen, onClose }: { isOpen: boolean; 
               <span className={styles.currencySymbol}>{getCurrencySymbol(currency)}</span>
               Amount
             </label>
-            <input type="number" name="amount" placeholder="0.00" step="0.01" min="0.01" required />
+            <input
+              type="number"
+              name="amount"
+              placeholder="0.00"
+              step="0.01"
+              min="0.01"
+              required
+              defaultValue={isEditMode ? expense.amount : undefined}
+            />
           </div>
 
           <div className={styles.inputGroup}>
@@ -64,24 +102,34 @@ export default function AddExpenseModal({ isOpen, onClose }: { isOpen: boolean; 
                 className={styles.customSelectTrigger}
                 onClick={() => setIsSelectOpen(!isSelectOpen)}
               >
-                <span>{category || "Select Category"}</span>
+                <span>
+                  {category
+                    ? `${categories.find(c => c.name === category)?.emoji || "📦"} ${category}`
+                    : "Select Category"}
+                </span>
                 <ChevronDown size={20} />
               </div>
 
               {isSelectOpen && (
                 <div className={styles.customOptions}>
-                  {categories.map((cat) => (
-                    <div
-                      key={cat}
-                      className={styles.option}
-                      onClick={() => {
-                        setCategory(cat)
-                        setIsSelectOpen(false)
-                      }}
-                    >
-                      {cat}
-                    </div>
-                  ))}
+                  {loadingCategories ? (
+                    <div className={styles.option} style={{ color: "var(--text-muted)" }}>Loading...</div>
+                  ) : categories.length === 0 ? (
+                    <div className={styles.option} style={{ color: "var(--text-muted)" }}>No categories yet</div>
+                  ) : (
+                    categories.map((cat) => (
+                      <div
+                        key={cat.id}
+                        className={styles.option}
+                        onClick={() => {
+                          setCategory(cat.name)
+                          setIsSelectOpen(false)
+                        }}
+                      >
+                        {cat.emoji} {cat.name}
+                      </div>
+                    ))
+                  )}
                 </div>
               )}
             </div>
@@ -89,7 +137,12 @@ export default function AddExpenseModal({ isOpen, onClose }: { isOpen: boolean; 
 
           <div className={styles.inputGroup}>
             <label><FileText size={16} /> Description</label>
-            <input type="text" name="description" placeholder="What was it for?" />
+            <input
+              type="text"
+              name="description"
+              placeholder="What was it for?"
+              defaultValue={isEditMode ? expense.description : undefined}
+            />
           </div>
 
           <button
@@ -98,7 +151,10 @@ export default function AddExpenseModal({ isOpen, onClose }: { isOpen: boolean; 
             style={{ width: "100%", marginTop: "1rem" }}
             disabled={pending}
           >
-            {pending ? "Saving..." : "Save Expense"}
+            {pending
+              ? (isEditMode ? "Updating..." : "Saving...")
+              : (isEditMode ? "Update Expense" : "Save Expense")
+            }
           </button>
         </form>
       </div>

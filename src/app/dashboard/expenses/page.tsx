@@ -1,6 +1,7 @@
 import { auth } from "@/auth"
 import { prisma } from "@/lib/prisma"
 import ExpensesClient from "./ExpensesClient"
+import { getCategories } from "./actions"
 
 export default async function ExpensesPage() {
   const session = await auth()
@@ -9,14 +10,18 @@ export default async function ExpensesPage() {
     return <ExpensesClient expenses={[]} isGuest={true} />
   }
 
-  const expenses = await prisma.expense.findMany({
-    where: { userId: session.user.id },
-    orderBy: { date: "desc" },
-  })
+  const [expenses, categories] = await Promise.all([
+    prisma.expense.findMany({
+      where: { userId: session.user.id },
+      orderBy: { date: "desc" },
+    }),
+    getCategories(),
+  ])
 
   return (
     <ExpensesClient
       isGuest={false}
+      categories={categories}
       expenses={expenses.map(e => ({
         id: e.id,
         description: e.description ?? "",
