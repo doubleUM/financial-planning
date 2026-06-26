@@ -11,8 +11,7 @@ import {
   type CategoryData,
 } from "@/app/dashboard/expenses/actions"
 import styles from "./CategoryManager.module.css"
-
-const EMOJI_OPTIONS = ["🍔", "🚗", "🛒", "💡", "🎬", "💪", "📦", "🏠", "✈️", "📚", "🎮", "☕", "👗", "💊", "🎁", "🐶", "🎵", "💼"]
+import EmojiPicker, { Theme, EmojiStyle } from "emoji-picker-react"
 
 export default function CategoryManager() {
   const [categories, setCategories] = useState<CategoryData[]>([])
@@ -199,17 +198,13 @@ export default function CategoryManager() {
             {newEmoji}
           </button>
           {showEmojiPicker && (
-            <div className={styles.emojiGrid}>
-              {EMOJI_OPTIONS.map(e => (
-                <button
-                  key={e}
-                  type="button"
-                  className={styles.emojiOption}
-                  onClick={() => { setNewEmoji(e); setShowEmojiPicker(false) }}
-                >
-                  {e}
-                </button>
-              ))}
+            <div className={styles.pickerAbsolute}>
+              <EmojiPicker
+                onEmojiClick={(emojiData) => { setNewEmoji(emojiData.emoji); setShowEmojiPicker(false) }}
+                theme={Theme.DARK}
+                emojiStyle={EmojiStyle.NATIVE}
+                lazyLoadEmojis={true}
+              />
             </div>
           )}
         </div>
@@ -248,17 +243,13 @@ export default function CategoryManager() {
                       {editEmoji}
                     </button>
                     {showEditEmojiPicker && (
-                      <div className={styles.emojiGrid}>
-                        {EMOJI_OPTIONS.map(e => (
-                          <button
-                            key={e}
-                            type="button"
-                            className={styles.emojiOption}
-                            onClick={() => { setEditEmoji(e); setShowEditEmojiPicker(false) }}
-                          >
-                            {e}
-                          </button>
-                        ))}
+                      <div className={styles.pickerAbsolute}>
+                        <EmojiPicker
+                          onEmojiClick={(emojiData) => { setEditEmoji(emojiData.emoji); setShowEditEmojiPicker(false) }}
+                          theme={Theme.DARK}
+                          emojiStyle={EmojiStyle.NATIVE}
+                          lazyLoadEmojis={true}
+                        />
                       </div>
                     )}
                   </div>

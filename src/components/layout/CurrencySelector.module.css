@@ -26,6 +26,11 @@
   font-size: 0.85rem;
 }
 
+.chevron {
+  color: var(--text-muted);
+  transition: transform 0.2s ease;
+}
+
 .rotate {
   transform: rotate(180deg);
 }

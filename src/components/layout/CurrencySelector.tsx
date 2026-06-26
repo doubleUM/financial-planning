@@ -42,7 +42,7 @@ export default function CurrencySelector() {
       >
         <Globe size={18} />
         <span className={styles.code}>{selected.code}</span>
-        <ChevronDown size={16} className={isOpen ? styles.rotate : ""} />
+        <ChevronDown size={16} className={`${styles.chevron} ${isOpen ? styles.rotate : ""}`} />
       </button>
 
       {isOpen && (

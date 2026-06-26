@@ -1,8 +1,10 @@
 "use client"
 
+import { useState, useRef, useEffect } from "react"
 import { formatCurrency } from "@/lib/utils/currency"
 import { useCurrency } from "@/components/providers/CurrencyContext"
 import DemoBanner from "@/components/layout/DemoBanner"
+import { ChevronDown } from "lucide-react"
 import styles from "./stats.module.css"
 
 export type StatsData = {
@@ -38,6 +40,20 @@ const MOCK_DATA: StatsData = {
 
 export default function StatsClient({ isGuest, data }: { isGuest: boolean; data: StatsData | null }) {
   const { currency: userCurrency } = useCurrency()
+  const [chartView, setChartView] = useState<"monthly" | "category">("monthly")
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false)
+  const dropdownRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsDropdownOpen(false)
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside)
+    return () => document.removeEventListener("mousedown", handleClickOutside)
+  }, [])
+
   const stats = isGuest ? MOCK_DATA : data!
 
   if (!isGuest && !stats.hasData) {
@@ -68,24 +84,72 @@ export default function StatsClient({ isGuest, data }: { isGuest: boolean; data:
       </header>
 
       <div className={styles.grid}>
-        {/* Monthly Spending Trend */}
+        {/* Main Chart */}
         <div className={styles.card}>
-          <h3>Monthly Spending</h3>
-          <div className={styles.chartContainer}>
-            {stats.monthlyTrend.map((month) => (
-              <div key={month.month} className={styles.barGroup}>
-                <div className={styles.barWrapper}>
-                  <div
-                    className={styles.bar}
-                    style={{ height: `${(month.amount / maxMonthly) * 100}%` }}
-                  />
+          <div className={styles.cardHeader}>
+            <h3>{chartView === "monthly" ? "Monthly Spending" : "Category Spending"}</h3>
+            <div className={styles.customSelect} ref={dropdownRef}>
+              <button 
+                className={styles.selectTrigger}
+                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+              >
+                {chartView === "monthly" ? "Monthly View" : "Category View"}
+                <ChevronDown size={16} className={`${styles.chevron} ${isDropdownOpen ? styles.chevronOpen : ""}`} />
+              </button>
+              
+              {isDropdownOpen && (
+                <div className={styles.selectMenu}>
+                  <button 
+                    className={`${styles.selectOption} ${chartView === "monthly" ? styles.selectOptionActive : ""}`}
+                    onClick={() => { setChartView("monthly"); setIsDropdownOpen(false); }}
+                  >
+                    Monthly View
+                  </button>
+                  <button 
+                    className={`${styles.selectOption} ${chartView === "category" ? styles.selectOptionActive : ""}`}
+                    onClick={() => { setChartView("category"); setIsDropdownOpen(false); }}
+                  >
+                    Category View
+                  </button>
                 </div>
-                <span className={styles.barLabel}>{month.month}</span>
-                <span className={styles.barValue}>
-                  {formatCurrency(month.amount, userCurrency)}
-                </span>
-              </div>
-            ))}
+              )}
+            </div>
+          </div>
+          <div className={styles.chartContainer}>
+            {chartView === "monthly" ? (
+              stats.monthlyTrend.map((month) => (
+                <div key={month.month} className={styles.barGroup}>
+                  <div className={styles.barWrapper}>
+                    <div
+                      className={styles.bar}
+                      style={{ height: `${(month.amount / maxMonthly) * 100}%` }}
+                    />
+                  </div>
+                  <span className={styles.barLabel}>{month.month}</span>
+                  <span className={styles.barValue}>
+                    {formatCurrency(month.amount, userCurrency)}
+                  </span>
+                </div>
+              ))
+            ) : (
+              stats.categoryBreakdown.slice(0, 5).map((cat) => (
+                <div key={cat.category} className={styles.barGroup}>
+                  <div className={styles.barWrapper}>
+                    <div
+                      className={styles.bar}
+                      style={{ 
+                        height: `${(cat.amount / Math.max(...stats.categoryBreakdown.map(c => c.amount), 1)) * 100}%`,
+                        background: 'linear-gradient(180deg, var(--accent-light), var(--accent))'
+                      }}
+                    />
+                  </div>
+                  <span className={styles.barLabel} title={cat.category}>{cat.emoji}</span>
+                  <span className={styles.barValue}>
+                    {formatCurrency(cat.amount, userCurrency)}
+                  </span>
+                </div>
+              ))
+            )}
           </div>
         </div>
 
