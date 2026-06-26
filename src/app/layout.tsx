@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { DM_Sans } from "next/font/google";
 import "./globals.css";
 import Providers from "@/components/providers/SessionProvider";
+import { ThemeProvider } from "@/components/providers/ThemeProvider";
 import Navbar from "@/components/layout/Navbar";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
@@ -29,14 +30,16 @@ export default async function RootLayout({
   const initialCurrency = session?.user?.currency || "USD";
 
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body className={dmSans.className}>
-        <Providers initialCurrency={initialCurrency}>
-          <Navbar isLoggedIn={!!session?.user} />
-          <main style={{ paddingBottom: "7rem" }}>
-            {children}
-          </main>
-        </Providers>
+        <ThemeProvider attribute="data-theme" defaultTheme="dark" enableSystem>
+          <Providers initialCurrency={initialCurrency}>
+            <Navbar isLoggedIn={!!session?.user} />
+            <main style={{ paddingBottom: "7rem" }}>
+              {children}
+            </main>
+          </Providers>
+        </ThemeProvider>
         <Analytics />
         <SpeedInsights />
       </body>

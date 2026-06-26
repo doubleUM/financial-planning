@@ -8,6 +8,7 @@ import { Home, List, PieChart, Plus, User, LogIn } from "lucide-react"
 import styles from "./Navbar.module.css"
 import AddExpenseModal from "../expenses/AddExpenseModal"
 import CurrencySelector from "./CurrencySelector"
+import ThemeToggle from "./ThemeToggle"
 
 type NavbarProps = {
   isLoggedIn?: boolean
@@ -72,7 +73,10 @@ export default function Navbar({ isLoggedIn = false }: NavbarProps) {
                   </Link>
                 ))}
               </div>
-              <CurrencySelector />
+              <div style={{ display: "flex", alignItems: "center", gap: "0.8rem" }}>
+                <CurrencySelector />
+                <ThemeToggle />
+              </div>
             </div>
           </div>
         </div>

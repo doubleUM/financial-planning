@@ -1,0 +1,23 @@
+.toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  background: rgba(255, 255, 255, 0.05);
+  border: var(--border-subtle);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.toggle:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--accent);
+}
+
+.placeholder {
+  width: 36px;
+  height: 36px;
+}

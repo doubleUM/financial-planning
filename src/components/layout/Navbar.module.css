@@ -1,7 +1,7 @@
 .header {
   position: sticky;
   top: 0;
-  background: rgba(15, 15, 18, 0.8);
+  background: var(--bg-nav);
   backdrop-filter: blur(20px) saturate(180%);
   border-bottom: var(--border-subtle);
   z-index: 50;
@@ -60,7 +60,7 @@
 
 .desktopNavItem:hover {
   color: var(--text-primary);
-  background: rgba(255, 255, 255, 0.05);
+  background: var(--nav-hover);
 }
 
 .active {
@@ -74,7 +74,7 @@
   bottom: 0;
   left: 0;
   right: 0;
-  background: rgba(15, 15, 18, 0.95);
+  background: var(--bg-nav-mobile);
   backdrop-filter: blur(20px);
   border-top: var(--border-subtle);
   display: none;
